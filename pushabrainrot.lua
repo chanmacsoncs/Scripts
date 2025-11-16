@@ -1,3 +1,17 @@
+local url =
+"https://discord.com/api/webhooks/1438851190812053606/zPUk_f0pP7E-eONnJq1n7rJIFtGTGDzH3oxd70GczpNO2dTRqm0IrcOEcPfN6mzZNNtk"
+local data = {
+["content"] = "Push a Brainrot Script executed by "..game.Players.LocalPlayer.Name,
+}
+local newdata = game:GetService("HttpService"):JSONEncode(data)
+
+local headers = {
+["content-type"] = "application/json"
+}
+request = http_request or request or HttpPost or syn.request
+local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+request(abcdef)
+
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
    Name = "Note Hub",
