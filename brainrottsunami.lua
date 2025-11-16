@@ -41,15 +41,15 @@ local Window = Rayfield:CreateWindow({
       RememberJoins = true
    },
 
-   KeySystem = false,
+   KeySystem = true,
    KeySettings = {
-      Title = "Untitled",
-      Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", 
+      Title = "Note Hub",
+      Subtitle = "Get Key",
+      Note = "Join our discord server to get the key! There is no key systems", 
       FileName = "Key",
       SaveKey = true,
       GrabKeyFromSite = false,
-      Key = {"Hello"}
+      Key = {"note123"}
    }
 })
 --#endregion
