@@ -2,7 +2,7 @@
     local url =
     "https://discord.com/api/webhooks/1438851190812053606/zPUk_f0pP7E-eONnJq1n7rJIFtGTGDzH3oxd70GczpNO2dTRqm0IrcOEcPfN6mzZNNtk"
     local data = {
-    ["content"] = "Script executed by "..game.Players.LocalPlayer.Name,
+    ["content"] = "Brainrot Tsunami script executed by "..game.Players.LocalPlayer.Name,
     }
     local newdata = game:GetService("HttpService"):JSONEncode(data)
 
