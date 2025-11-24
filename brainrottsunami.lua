@@ -2,7 +2,7 @@
     local url =
     "https://discord.com/api/webhooks/1438851190812053606/zPUk_f0pP7E-eONnJq1n7rJIFtGTGDzH3oxd70GczpNO2dTRqm0IrcOEcPfN6mzZNNtk"
     local data = {
-    ["content"] = "Brainrot Tsunami script executed by "..game.Players.LocalPlayer.Name,
+    ["content"] = "Script executed by "..game.Players.LocalPlayer.Name,
     }
     local newdata = game:GetService("HttpService"):JSONEncode(data)
 
@@ -43,13 +43,13 @@ local Window = Rayfield:CreateWindow({
 
    KeySystem = false,
    KeySettings = {
-      Title = "Note Hub",
-      Subtitle = "Get Key",
-      Note = "Join our discord server to get the key! There is no key systems", 
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided", 
       FileName = "Key",
-      SaveKey = false,
+      SaveKey = true,
       GrabKeyFromSite = false,
-      Key = {"note123"}
+      Key = {"Hello"}
    }
 })
 --#endregion
@@ -330,17 +330,6 @@ local AutoCollectDiamonds = Main:CreateToggle({
    Flag = "autocollectdiamonds", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
         autocollectdiamonds = Value
-        if autocollectdiamonds == true then
-            while autocollectdiamonds do
-                for _, diamond in workspace.Diamonds:GetChildren() do
-                    if not diamond:FindFirstChild("TouchPart") then continue end
-                    if not hrp then continue end
-                    firetouchinterest(hrp, diamond.TouchPart, 0)
-                    task.wait()
-                end
-                task.wait()
-            end
-        end
    end
 })
 
@@ -415,17 +404,6 @@ local AutoCollectCrates = Crates:CreateToggle({
    Flag = "autocollectcrates", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Value)
         autocollectcrates = Value
-        if autocollectcrates == true then
-            while autocollectcrates do
-                for _, crate in workspace.Crates:GetChildren() do
-                    if not crate:FindFirstChild("TouchPart") then continue end
-                    if not hrp then continue end
-                    firetouchinterest(hrp, crate.TouchPart, 0)
-                    task.wait()
-                end
-                task.wait()
-            end
-        end
    end
 })
 --#endregion
@@ -551,3 +529,119 @@ game:GetService("Players").LocalPlayer.PlayerGui.Effects.RewardList.ChildAdded:C
         onReceiveItem(items[tonumber(id)], tonumber(item.Quantity.Text:sub(2)))
     end
 end)
+
+--#region Misc for auto collect
+if game:GetService("Players").LocalPlayer.PlayerGui.Effects:FindFirstChild("TransitionFrame") then
+    game:GetService("Players").LocalPlayer.PlayerGui.Effects.TransitionFrame:Destroy()
+end
+local list = {
+    ["Larila Desert"] = {
+        ["Size"] = Vector3.new(300, 4, 800),
+        ["CFrame"] = CFrame.new(1359.39417, 21, -1500, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+        ["Wins"] = 30
+    },
+    ["Brainrot City"] = {
+        ["Size"] = Vector3.new(300, 4, 800),
+        ["CFrame"] = CFrame.new(55, 21, -1500, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+        ["Wins"] = 0
+    },
+    ["Mount Ambalabu"] = {
+        ["Size"] = Vector3.new(300, 4, 800),
+        ["CFrame"] = CFrame.new(2635, 21, -1500, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+        ["Wins"] = 250
+    },
+    ["Chicleteiramania"] = {
+        ["Size"] = Vector3.new(300, 4, 800),
+        ["CFrame"] = CFrame.new(3975, 21, -1500, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+        ["Wins"] = 2500
+    }
+}
+local touchlist = {
+    ["Larila Desert"] = {
+        ["Size"] = Vector3.new(300, 4, 100),
+        ["CFrame"] = CFrame.new(1359.16858, 28.811842, -995.158691, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    },
+    ["Brainrot City"] = {
+        ["Size"] = Vector3.new(300, 4, 100),
+        ["CFrame"] = CFrame.new(56.7017822, 29.0556221, -995.361755, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    },
+    ["Mount Ambalabu"] = {
+        ["Size"] = Vector3.new(300, 4, 100),
+        ["CFrame"] = CFrame.new(2631.02515, 28.811842, -995.62616, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    },
+    ["Chicleteiramania"] = {
+        ["Size"] = Vector3.new(300, 4, 100),
+        ["CFrame"] = CFrame.new(3972.47998, 27.4798145, -1008.46906, 1, 0, 0, 0, 1, 0, 0, 0, 1)
+    }
+}
+local function waitForTouch(name)
+    local wins = getCost(game:GetService("Players").LocalPlayer.leaderstats.Wins.Value)
+    if list[name].Wins > wins then return end
+
+    local params = OverlapParams.new()
+    params.FilterType = Enum.RaycastFilterType.Include
+    params.FilterDescendantsInstances = {workspace}
+
+    local part = Instance.new("Part")
+    part.Parent = workspace
+    part.Anchored = true
+    part.Transparency = 1
+    part.CanCollide = false
+    part.Size = touchlist[name].Size
+    part.CFrame = touchlist[name].CFrame
+
+    local time = 0;
+    task.spawn(function()
+        wait(1)
+        time = time +1
+        if time < 5 then
+            return
+        end
+    end)
+
+    while wait() do
+        local parts = workspace:GetPartsInPart(part,params)
+        for _, p in ipairs(parts) do
+            if p.Parent == game.Players.LocalPlayer.Character then
+                return
+            end
+        end
+    end
+end
+
+--#endregion
+
+while autocollectdiamonds or autocollectcrates do
+    for name, map in pairs(list) do
+        game:GetService("ReplicatedStorage").Packages.Knit.Services.TeleportService.RF.RequestTeleport:InvokeServer(name)
+        print("Requesting Teleport To:", name)
+        waitForTouch(name)
+
+        local part = Instance.new("Part")
+        part.Parent = workspace
+        part.Anchored = true
+        part.Transparency = 1
+        part.CanCollide = false
+        part.Size = map.Size
+        part.CFrame = map.CFrame
+
+        for _, thing in ipairs(workspace:GetPartsInPart(part, params)) do
+            local parent = thing.Parent
+            if parent and parent:FindFirstChild("TouchPart") then
+                local parentName = parent.Parent and parent.Parent.Name
+                if parentName == "Crates" and autocollectcrates then
+                    firetouchinterest(hrp, parent.TouchPart, 0)
+                    task.wait(0.005)
+                    firetouchinterest(hrp, parent:FindFirstChild("TouchPart"), 1)
+                elseif parentName == "Diamonds" and autocollectdiamonds then
+                    firetouchinterest(hrp, parent.TouchPart, 0)
+                    task.wait(0.005)
+                    firetouchinterest(hrp, parent:FindFirstChild("TouchPart"), 1)
+                end
+            end
+        end
+
+        part:Destroy()
+        task.wait(1)
+    end
+end
