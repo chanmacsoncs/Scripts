@@ -631,11 +631,9 @@ while autocollectdiamonds or autocollectcrates do
                 local parentName = parent.Parent and parent.Parent.Name
                 if parentName == "Crates" and autocollectcrates then
                     firetouchinterest(hrp, parent.TouchPart, 0)
-                    task.wait(0.005)
                     firetouchinterest(hrp, parent:FindFirstChild("TouchPart"), 1)
                 elseif parentName == "Diamonds" and autocollectdiamonds then
                     firetouchinterest(hrp, parent.TouchPart, 0)
-                    task.wait(0.005)
                     firetouchinterest(hrp, parent:FindFirstChild("TouchPart"), 1)
                 end
             end
