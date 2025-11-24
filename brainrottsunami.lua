@@ -594,7 +594,7 @@ local function waitForTouch(name)
     task.spawn(function()
         wait(1)
         time = time +1
-        if time < 5 then
+        if time > 5 then
             return
         end
     end)
@@ -611,35 +611,44 @@ end
 
 --#endregion
 
-while autocollectdiamonds or autocollectcrates do
-    for name, map in pairs(list) do
-        game:GetService("ReplicatedStorage").Packages.Knit.Services.TeleportService.RF.RequestTeleport:InvokeServer(name)
-        print("Requesting Teleport To:", name)
-        waitForTouch(name)
+while true do
+    if autocollectcrates or autocollectdiamonds then
+        for name, map in pairs(list) do
+            game:GetService("ReplicatedStorage").Packages.Knit.Services.TeleportService.RF.RequestTeleport:InvokeServer(name)
+            print("Requesting Teleport To:", name)
+            waitForTouch(name)
 
-        local part = Instance.new("Part")
-        part.Parent = workspace
-        part.Anchored = true
-        part.Transparency = 1
-        part.CanCollide = false
-        part.Size = map.Size
-        part.CFrame = map.CFrame
+            local part = Instance.new("Part")
+            part.Parent = workspace
+            part.Anchored = true
+            part.Transparency = 1
+            part.CanCollide = false
+            part.Size = map.Size
+            part.CFrame = map.CFrame
 
-        for _, thing in ipairs(workspace:GetPartsInPart(part, params)) do
-            local parent = thing.Parent
-            if parent and parent:FindFirstChild("TouchPart") then
-                local parentName = parent.Parent and parent.Parent.Name
-                if parentName == "Crates" and autocollectcrates then
-                    firetouchinterest(hrp, parent.TouchPart, 0)
-                    firetouchinterest(hrp, parent:FindFirstChild("TouchPart"), 1)
-                elseif parentName == "Diamonds" and autocollectdiamonds then
-                    firetouchinterest(hrp, parent.TouchPart, 0)
-                    firetouchinterest(hrp, parent:FindFirstChild("TouchPart"), 1)
+            for _, thing in ipairs(workspace:GetPartsInPart(part, params)) do
+                local parent = thing.Parent
+                if parent and parent:FindFirstChild("TouchPart") then
+                    local parentName = parent.Parent and parent.Parent.Name
+                    if parentName == "Crates" and autocollectcrates then
+                        if not autocollectcrates then continue end
+                        firetouchinterest(hrp, parent.TouchPart, 0)
+                        task.wait(0.005)
+                        if not parent:FindFirstChild("TouchPart") then continue end
+                        firetouchinterest(hrp, parent.TouchPart, 1)
+                    elseif parentName == "Diamonds" and autocollectdiamonds then
+                        if not autocollectdiamonds then continue end
+                        firetouchinterest(hrp, parent.TouchPart, 0)
+                        task.wait(0.005)
+                        if not parent:FindFirstChild("TouchPart") then continue end
+                        firetouchinterest(hrp, parent.TouchPart, 1)
+                    end
                 end
             end
-        end
 
-        part:Destroy()
-        task.wait(1)
+            part:Destroy()
+            task.wait(1)
+        end
     end
+    task.wait()
 end
