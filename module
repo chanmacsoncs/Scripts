@@ -9,4 +9,19 @@ for _, restaurant in workspace.__THINGS.Restaurants:GetChildren() do
     end
 end
 
+task.spawn(function()
+    repeat 
+        local list = {}
+        for _, thing in module.Restaurant.Entities:GetChildren() do
+            if not thing:FindFirstChild("HumanoidRootPart") then continue end
+            if not thing.HumanoidRootPart:FindFirstChild("ProximityPrompt") then continue end
+            if not thing.HumanoidRootPart.ProximityPrompt.ActionText == "Asign Seat" then continue end
+            list[#list+1] = thing
+        end
+        module.WaitingCustomers = list
+        print("Refreshed List")
+        task.wait(0.5)
+    until false
+end)
+
 return module
