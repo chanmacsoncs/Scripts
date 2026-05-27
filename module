@@ -1,1 +1,12 @@
+module = {
+    
+}
 
+for _, restaurant in workspace.__THINGS.Restaurants:GetChildren() do
+    PlayerName = restaurant.RestaurantBilboardHost.RestaurantBillboard.Frame.PlayerName.text
+    if PlayerName == game.Players.LocalPlayer.DisplayName then 
+        module.Restaurant = restaurant
+    end
+end
+
+return module
