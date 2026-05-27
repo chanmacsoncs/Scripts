@@ -19,7 +19,7 @@ task.spawn(function()
             list[#list+1] = thing
         end
         module.WaitingCustomers = list
-        task.wait(0.5)
+        task.wait(0.1)
     until false
 end)
 
