@@ -19,7 +19,6 @@ task.spawn(function()
             list[#list+1] = thing
         end
         module.WaitingCustomers = list
-        print("Refreshed List")
         task.wait(0.5)
     until false
 end)
